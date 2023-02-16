@@ -45,7 +45,6 @@ const addIncomeAmount = () => {
       return x > 0;
     }).reduce((a, b) => a + b, 0);
     incomeAmount = incAmt;
-    console.log(walletMoney + incomeAmount);
     const html = ` <div class="income-section">
         <div class="income-name">${userVal.value}</div>
         <div class="income-details">
@@ -77,7 +76,6 @@ const addExpenseAmount = () => {
 
     ExpenseAmount = expAmt;
     walletMoney = walletMoney + incomeAmount - ExpenseAmount;
-    console.log(walletMoney);
     if (walletMoney > -1) {
       const html = ` <div class="expense-section">
         <div class="expense-name">${userVal.value}</div>
