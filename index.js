@@ -19,39 +19,76 @@ let incomeAmount = 0;
 let ExpenseAmount = 0;
 const AmountArray = [];
 
+// when app is loaded on the screen
 window.addEventListener("DOMContentLoaded", () => {
   walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
   incomeSec.innerHTML = `Income <i class="fa-solid fa-dollar-sign"></i> : ${incomeAmount}`;
   expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : ${ExpenseAmount}`;
 });
 
-const walletMoneyAdd = () => {
-  walletMoney = Number(prompt("Please set your monthly Pocket Money Balance"));
-  walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
-  console.log(walletMoney);
+function Message() {
+  alert("Please Adding Name or Amount Then after Adding the Expenses 🙏");
+}
+
+const incMoney = function (myArray) {
+  const incAmount = myArray
+    .filter((x) => {
+      return x > 0;
+    })
+    .reduce((a, b) => a + b);
+  return incAmount;
 };
 
-// Adding Income into the list
+// calculating Expense
+
+const expMoney = function (myArray) {
+  const exptAmt = myArray
+    .filter((x) => {
+      return x < 0;
+    })
+    .reduce((a, b) => a + b);
+  return exptAmt;
+};
+
+// adding Pocket Money function
+const walletMoneyAdd = () => {
+  walletMoney = Number(
+    prompt("Please Add your Pocket Money First Then go Ahead 🙏")
+  );
+  incomeAmount = 0;
+  ExpenseAmount = 0;
+  walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
+  incomeSec.innerHTML = `Income <i class="fa-solid fa-dollar-sign"></i> : ${incomeAmount}`;
+
+  expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : ${ExpenseAmount}`;
+  listContainer.innerHTML = " ";
+};
+
+// OpenModal Function
+const openModal = () => {
+  modalContainer.classList.add("active-modal");
+  mainContainer.classList.add("active-main");
+};
+const closeModal = () => {
+  modalContainer.classList.remove("active-modal");
+  mainContainer.classList.remove("active-main");
+};
 
 const addIncomeAmount = () => {
   if (walletMoney === 0) {
-    alert("Please adding the Pocket Money first then go ahead 🙏");
+    walletMoneyAdd();
   } else if (userVal.value === "" || userAmt.value === "") {
-    alert("Please Adding Expense Name or Amount 🙏");
+    Message();
   } else {
     AmountArray.push(Number(userAmt.value));
-
-    const incAmt = AmountArray.filter((x) => {
-      return x > 0;
-    }).reduce((a, b) => a + b, 0);
-    incomeAmount = incAmt;
+    incomeAmount = incMoney(AmountArray);
     const html = ` <div class="income-section">
-        <div class="income-name">${userVal.value}</div>
-        <div class="income-details">
-            <div class="income-amount">INC : ${userAmt.value}</div>
-            <i  class="fa-solid fa-trash"></i>
-        </div>
-    </div>`;
+         <div class="income-name">${userVal.value}</div>
+         <div class="income-details">
+             <div class="income-amount">INC : ${userAmt.value}</div>
+             <i onclick="delte()" class="fa-solid fa-trash"></i>
+         </div>
+         </div>`;
     listContainer.insertAdjacentHTML("beforeend", html);
     modalContainer.classList.remove("active-modal");
     mainContainer.classList.remove("active-main");
@@ -59,56 +96,54 @@ const addIncomeAmount = () => {
     walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${
       walletMoney + incomeAmount
     }`;
+    userAmt.value = "";
+    userVal.value = "";
   }
 };
 
-// rechecking all the code;
 const addExpenseAmount = () => {
   if (walletMoney === 0) {
-    alert("Please adding the Pocket Money first then go ahead 🙏");
+    walletMoneyAdd();
   } else if (userVal.value === "" || userAmt.value === "") {
-    alert("Please Adding Expense Name or Amount 🙏");
+    Message();
   } else {
     AmountArray.push(Number(-userAmt.value));
-    const expAmt = AmountArray.filter((x) => {
-      return x < 0;
-    }).reduce((a, b) => a + b, 0);
-
-    ExpenseAmount = expAmt;
-    walletMoney = walletMoney + incomeAmount - ExpenseAmount;
-    if (walletMoney > -1) {
-      const html = ` <div class="expense-section">
-        <div class="expense-name">${userVal.value}</div>
-        <div class="expense-details">
-            <div class="expense-amount">EXP : ${userAmt.value}</div>
-            <i  class="fa-solid fa-trash"></i>
+    ExpenseAmount = expMoney(AmountArray);
+    let final = walletMoney + incomeAmount + ExpenseAmount;
+    if (final > 0) {
+      const html = ` <div class="income-section">
+        <div class="income-name">${userVal.value}</div>
+        <div class="income-details">
+            <div class="income-amount">EXP : ${userAmt.value}</div>
+            <i onclick="delte()" class="fa-solid fa-trash"></i>
         </div>
-    </div>`;
+        </div>`;
       listContainer.insertAdjacentHTML("beforeend", html);
       modalContainer.classList.remove("active-modal");
       mainContainer.classList.remove("active-main");
-      expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : -${ExpenseAmount}`;
-      walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
+      expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : ${ExpenseAmount}`;
+      walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${final}`;
+      userAmt.value = "";
+      userVal.value = "";
+    } else if (final === 0) {
+      alert(
+        "Your account is Empty After this Transaction Are your sure ?  Please click ok"
+      );
+      modalContainer.classList.remove("active-modal");
+      mainContainer.classList.remove("active-main");
+      walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${final}`;
     } else {
-      alert("Please bro");
+      alert(
+        "OOPS ! Your account have Insffuicent Fund for this Transaction 🥲"
+      );
+      modalContainer.classList.remove("active-modal");
+      mainContainer.classList.remove("active-main");
     }
   }
 };
 
-
-const openModal = () => {
-  modalContainer.classList.add("active-modal");
-  mainContainer.classList.add("active-main");
-};
-
-const closeModal = () => {
-  modalContainer.classList.remove("active-modal");
-  mainContainer.classList.remove("active-main");
-};
-
-
 pocketmoneyBtn.addEventListener("click", walletMoneyAdd);
-trashBtn.addEventListener("click", closeModal);
 mainButton.addEventListener("click", openModal);
+trashBtn.addEventListener("click", closeModal);
 incomeBtn.addEventListener("click", addIncomeAmount);
 expenseBtn.addEventListener("click", addExpenseAmount);
