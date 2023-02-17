@@ -19,17 +19,27 @@ let incomeAmount = 0;
 let ExpenseAmount = 0;
 const AmountArray = [];
 
-// when app is loaded on the screen
+// when app is loaded on the screen 
 window.addEventListener("DOMContentLoaded", () => {
   walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
   incomeSec.innerHTML = `Income <i class="fa-solid fa-dollar-sign"></i> : ${incomeAmount}`;
   expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : ${ExpenseAmount}`;
 });
 
-function Message() {
-  alert("Please Adding Name or Amount Then after Adding the Expenses 🙏");
-}
+// adding Pocket Money function
+const walletMoneyAdd = () => {
+    walletMoney = Number(
+      prompt("Please Add your Pocket Money First Then go Ahead 🙏")
+    );
+    incomeAmount = 0;
+    ExpenseAmount = 0;
+    walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
+    incomeSec.innerHTML = `Income <i class="fa-solid fa-dollar-sign"></i> : ${incomeAmount}`;
+    expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : ${ExpenseAmount}`;
+    listContainer.innerHTML = " ";
+  };
 
+/// CALCUALTING INCOME AMOUNT
 const incMoney = function (myArray) {
   const incAmount = myArray
     .filter((x) => {
@@ -39,8 +49,7 @@ const incMoney = function (myArray) {
   return incAmount;
 };
 
-// calculating Expense
-
+// calculating Expense AMOUNT
 const expMoney = function (myArray) {
   const exptAmt = myArray
     .filter((x) => {
@@ -50,30 +59,19 @@ const expMoney = function (myArray) {
   return exptAmt;
 };
 
-// adding Pocket Money function
-const walletMoneyAdd = () => {
-  walletMoney = Number(
-    prompt("Please Add your Pocket Money First Then go Ahead 🙏")
-  );
-  incomeAmount = 0;
-  ExpenseAmount = 0;
-  walletBalance.innerHTML = `Wallet <i class="fa-solid fa-wallet"></i>: ${walletMoney}`;
-  incomeSec.innerHTML = `Income <i class="fa-solid fa-dollar-sign"></i> : ${incomeAmount}`;
-
-  expenseSec.innerHTML = `Expense <i class="fa-solid fa-dollar-sign"></i> : ${ExpenseAmount}`;
-  listContainer.innerHTML = " ";
-};
 
 // OpenModal Function
 const openModal = () => {
   modalContainer.classList.add("active-modal");
   mainContainer.classList.add("active-main");
 };
+//CLOSE MODAL SECTION
 const closeModal = () => {
   modalContainer.classList.remove("active-modal");
   mainContainer.classList.remove("active-main");
 };
 
+/// ADDING INCOME AMMMOUNT AND SHOW 
 const addIncomeAmount = () => {
   if (walletMoney === 0) {
     walletMoneyAdd();
@@ -101,6 +99,7 @@ const addIncomeAmount = () => {
   }
 };
 
+///// ADDING EXPENSES AREA
 const addExpenseAmount = () => {
   if (walletMoney === 0) {
     walletMoneyAdd();
